@@ -1,0 +1,21 @@
+FROM node:16.14.2 AS development
+
+ARG CACHEBUST=1
+
+USER root
+
+WORKDIR /usr/src/app
+
+# COPY package.json /usr/src/api/
+# COPY ../yarn.lock /usr/src/api/
+
+COPY package.json /usr/src/app/
+COPY yarn.lock /usr/src/app/
+
+RUN yarn --foline --fronze-lockfile --link-duplicates
+
+COPY . .
+
+RUN yarn build
+
+EXPOSE 3333
