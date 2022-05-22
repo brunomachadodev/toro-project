@@ -6,13 +6,13 @@ interface AccountCardProps {
 
 export default function AccountCard({ data }: AccountCardProps): ReactElement {
   return (
-    <section className='bg-white shadow overflow-hidden max-w-3xl sm:rounded-lg mt-4 lg:mx-60 md:mx-9 xs:mx-3 '>
+    <section className='bg-white shadow overflow-hidden max-w-3xl sm:rounded-lg mt-4 lg:mx-60 md:mx-10 sm:mx-8 xs:mx-9 '>
       <header className='px-4 py-5 sm:px-6'>
         <h3 className='text-lg leading-6 font-medium text-gray-900'>
           Informações para depósito
         </h3>
         <p className='mt-1 max-w-2xl text-sm text-gray-500'>
-          Sua conta Toro aceita transferências por TED e PIX.
+          Sua conta Toro aceita transferências por TED e PIX, desde que a conta possua o mesmo CPF cadastrado.
         </p>
       </header>
       <div className='border-t border-gray-200'>
