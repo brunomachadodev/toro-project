@@ -39,4 +39,8 @@ export class AccountService {
   public async findByCpf(cpf: string) {
     return await this.accountRepository.findOneBy({ cpf });
   }
+
+  public async findById(id: number) {
+    return await this.accountRepository.findOneBy({ id });
+  }
 }
