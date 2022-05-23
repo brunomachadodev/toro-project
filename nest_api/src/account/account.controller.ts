@@ -18,8 +18,6 @@ export class AccountController {
   ): Promise<Express.Response | Account> {
     const parsedData = createAccountDto;
     parsedData.cpf = this.utilsService.formatCPF(createAccountDto.cpf);
-
-    console.log('CONTROLLER');
     const isEmailUsed = await this.accountService.checkIfEmailExists(
       parsedData.email,
     );
@@ -27,19 +25,13 @@ export class AccountController {
       parsedData.cpf,
     );
 
-    console.log(isEmailUsed);
-    console.log(isCpfUsed);
-
     if (!isEmailUsed && !isCpfUsed) {
-      const log = await this.accountService.create(createAccountDto);
-
-      console.log(' CHEGOU');
-      console.log(log);
-      return response.status(200).send(log);
+      const accountData = await this.accountService.create(createAccountDto);
+      return response.status(201).send(accountData);
     } else {
       return response.status(409).send({
         error: `Não foi possível criar uma nova conta. ${
-          isEmailUsed ? 'Email já cadastrado.' : ''
+          isEmailUsed ? 'Email já cadastrado. ' : ''
         }${isCpfUsed ? 'CPF já cadastrado.' : ''}`,
       });
     }
@@ -52,7 +44,7 @@ export class AccountController {
     const account = this.accountService.findByCpf(parsedCpf);
 
     if (account) {
-      return
+      return;
     }
   }
 }
