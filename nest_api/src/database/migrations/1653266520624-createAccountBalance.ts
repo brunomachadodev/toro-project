@@ -10,6 +10,9 @@ export class accountBalance1653242794061 implements MigrationInterface {
             name: 'id',
             type: 'int',
             isPrimary: true,
+            generationStrategy: 'identity',
+            generatedIdentity: 'ALWAYS',
+            isGenerated: true,
           },
           {
             name: 'account_id',
