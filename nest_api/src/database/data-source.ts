@@ -1,9 +1,9 @@
 import { DataSource } from 'typeorm';
 
-export const CoreDataSource = new DataSource({
+export const AccountDataSource = new DataSource({
   name: 'default',
   type: 'postgres',
-  host: 'localhost',
+  host: 'postgres',
   port: 5432,
   username: 'root',
   password: 'root',
