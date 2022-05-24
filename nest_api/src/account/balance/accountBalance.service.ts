@@ -11,16 +11,37 @@ export class AccountBalanceService {
     private readonly accountBalanceRepository: Repository<AccountBalance>,
   ) {}
 
+  public async handleBalanceAddition(
+    createAccountBalanceDto: CreateAccountBalanceDto,
+  ) {
+    const actualBalance = await this.findAccountLastBalance(
+      createAccountBalanceDto.accountId,
+    );
+
+    if (!actualBalance) {
+      return await this.create(createAccountBalanceDto);
+    } else {
+      createAccountBalanceDto.balance =
+        +createAccountBalanceDto.balance + +actualBalance.balance;
+      return await this.create(createAccountBalanceDto);
+    }
+  }
+
   public async create(
     createAccountBalanceDto: CreateAccountBalanceDto,
   ): Promise<AccountBalance> {
-    console.log(createAccountBalanceDto);
-
     const transaction = this.accountBalanceRepository.create(
       createAccountBalanceDto,
     );
-    console.log('TRANSACTION');
-    console.log(transaction);
     return await this.accountBalanceRepository.save(transaction);
+  }
+
+  public async findAccountLastBalance(
+    accountId: number,
+  ): Promise<AccountBalance> {
+    return await this.accountBalanceRepository.findOne({
+      where: { accountId: accountId },
+      order: { id: 'desc' },
+    });
   }
 }
