@@ -1,4 +1,5 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AccountService } from '../account.service';
 import { AccountBalanceService } from './accountBalance.service';
 import { CreateAccountBalanceDto } from './dto/create-accountBalance.dto';
@@ -11,20 +12,20 @@ export class AccountBalanceController {
   ) {}
 
   @Post('create')
-  async incrementBalance(
-    @Body() CreateAccountBalanceDto: CreateAccountBalanceDto,
-    @Res() response,
+  public async incrementBalance(
+    @Body() createAccountBalanceDto: CreateAccountBalanceDto,
+    @Res() response: Response,
   ): Promise<Express.Response> {
     const account = await this.accountService.findById(
-      CreateAccountBalanceDto.accountId,
+      createAccountBalanceDto.accountId,
     );
 
-    console.log(account);
-
     if (account) {
-      const accountTransaction = await this.accountBalanceService.create(
-        CreateAccountBalanceDto,
-      );
+      const accountTransaction =
+        await this.accountBalanceService.handleBalanceAddition(
+          createAccountBalanceDto,
+        );
+
       return response.status(200).send({
         conta: accountTransaction.accountId,
         saldo: accountTransaction.balance,
