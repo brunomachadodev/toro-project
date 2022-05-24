@@ -1,4 +1,5 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { Account } from './entities/account.entity';
@@ -12,12 +13,13 @@ export class AccountController {
   ) {}
 
   @Post('create')
-  async create(
+  public async create(
     @Body() createAccountDto: CreateAccountDto,
-    @Res() response,
+    @Res() response: Response,
   ): Promise<Express.Response | Account> {
     const parsedData = createAccountDto;
     parsedData.cpf = this.utilsService.formatCPF(createAccountDto.cpf);
+
     const isEmailUsed = await this.accountService.checkIfEmailExists(
       parsedData.email,
     );
@@ -26,7 +28,9 @@ export class AccountController {
     );
 
     if (!isEmailUsed && !isCpfUsed) {
-      const accountData = await this.accountService.create(createAccountDto);
+      const accountData = await this.accountService.handleAccountCreation(
+        createAccountDto,
+      );
       return response.status(201).send(accountData);
     } else {
       return response.status(409).send({
@@ -38,7 +42,7 @@ export class AccountController {
   }
 
   @Post('find')
-  async findAccountByCpf(cpf: string) {
+  public async findAccountByCpf(cpf: string) {
     const parsedCpf = this.utilsService.formatCPF(cpf);
 
     const account = this.accountService.findByCpf(parsedCpf);
