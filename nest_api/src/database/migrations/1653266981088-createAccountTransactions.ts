@@ -23,19 +23,24 @@ export class createAccountTransactions1653266981088
           {
             name: 'type',
             type: 'enum',
-            enum: ['deposit', 'TED', 'PIX'],
+            enum: ['DEPOSIT', 'TRANSFER', 'PIX', 'TED'],
           },
           {
             name: 'amount',
             type: 'numeric',
+            isUnique: false,
           },
           {
             name: 'origin_bank',
             type: 'varchar',
+            isUnique: false,
+            isNullable: true,
           },
           {
             name: 'origin_branch',
             type: 'varchar',
+            isUnique: false,
+            isNullable: true,
           },
           {
             name: 'created_at',
