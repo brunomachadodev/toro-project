@@ -1,4 +1,11 @@
-import { Body, Controller, Logger, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Logger,
+  Post
+} from '@nestjs/common';
 import { EventsService } from './events.service';
 
 @Controller('account/events')
@@ -16,6 +23,12 @@ export class EventsController {
       }
     } catch (error) {
       this.logger.error(error);
+      throw new HttpException(
+        {
+          error: 'Erro ao registrar transação.',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
