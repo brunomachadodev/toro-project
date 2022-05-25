@@ -17,13 +17,16 @@ export class AccountService {
     createAccountDto: CreateAccountDto,
   ): Promise<Account> {
     const account = await this.create(createAccountDto);
-    if (account)
+    if (account) {
       await this.accountBalanceService.handleBalanceAddition({
         accountId: account.id,
         balance: 0,
       });
+      return account;
+    } else {
+      throw new Error('Error creating account');
+    }
 
-    return account;
   }
 
   private async create(createAccountDto: CreateAccountDto): Promise<Account> {
