@@ -18,7 +18,7 @@ export class AccountService {
   ): Promise<Account> {
     const account = await this.create(createAccountDto);
     if (account)
-      await this.accountBalanceService.create({
+      await this.accountBalanceService.handleBalanceAddition({
         accountId: account.id,
         balance: 0,
       });
@@ -51,11 +51,15 @@ export class AccountService {
     }
   }
 
-  public async findByCpf(cpf: string) {
+  public async findByEmail(email: string): Promise<Account> {
+    return await this.accountRepository.findOneBy({ email });
+  }
+
+  public async findByCpf(cpf: string): Promise<Account> {
     return await this.accountRepository.findOneBy({ cpf });
   }
 
-  public async findById(id: number) {
+  public async findById(id: number): Promise<Account> {
     return await this.accountRepository.findOneBy({ id });
   }
 }
