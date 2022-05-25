@@ -33,7 +33,7 @@ export class EventsService {
         originBranch: transferDto.origin.branch,
       };
 
-      const transaction = await this.registerEvent(eventPayload).then((res) =>
+      const transaction = await this.registerEvent(eventPayload).then(() =>
         this.accountBalaanceService.handleBalanceAddition({
           accountId: account.id,
           balance: transferDto.amount,
@@ -57,7 +57,7 @@ export class EventsService {
 
       return await this.registerEvent(eventPayload);
     } else {
-      return { message: 'lol' };
+      throw new Error('Erro ao registrar transação.');
     }
   }
 
