@@ -14,16 +14,20 @@ export class AccountBalanceService {
   public async handleBalanceAddition(
     createAccountBalanceDto: CreateAccountBalanceDto,
   ) {
-    const actualBalance = await this.findAccountLastBalance(
-      createAccountBalanceDto.accountId,
-    );
+    try {
+      const actualBalance = await this.findAccountLastBalance(
+        createAccountBalanceDto.accountId,
+      );
 
-    if (!actualBalance) {
-      return await this.create(createAccountBalanceDto);
-    } else {
-      createAccountBalanceDto.balance =
-        +createAccountBalanceDto.balance + +actualBalance.balance;
-      return await this.create(createAccountBalanceDto);
+      if (!actualBalance) {
+        return await this.create(createAccountBalanceDto);
+      } else {
+        createAccountBalanceDto.balance =
+          +createAccountBalanceDto.balance + +actualBalance.balance;
+        return await this.create(createAccountBalanceDto);
+      }
+    } catch (error) {
+      throw new Error(error);
     }
   }
 
