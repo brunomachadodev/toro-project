@@ -31,26 +31,6 @@ export class AccountService {
     return await this.accountRepository.save(account);
   }
 
-  public async checkIfEmailExists(email: string): Promise<boolean> {
-    const emailExists = await this.accountRepository.findOneBy({ email });
-
-    if (!emailExists) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  public async checkIfCpfExists(cpf: string): Promise<boolean> {
-    const cpfExists = await this.findByCpf(cpf);
-
-    if (!cpfExists) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   public async findByEmail(email: string): Promise<Account> {
     return await this.accountRepository.findOneBy({ email });
   }
