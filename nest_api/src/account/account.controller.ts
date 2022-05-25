@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Logger,
+  Post,
+  Res
+} from '@nestjs/common';
 import { Response } from 'express';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
@@ -11,6 +19,7 @@ export class AccountController {
     private readonly accountService: AccountService,
     private readonly utilsService: UtilsService,
   ) {}
+  private logger: Logger = new Logger(AccountController.name);
 
   @Post('create')
   public async create(
@@ -41,13 +50,23 @@ export class AccountController {
   }
 
   @Post('find')
-  public async findAccountByCpf(cpf: string) {
-    const parsedCpf = this.utilsService.formatCPF(cpf);
+  public async findAccountByCpf(cpf: string): Promise<Account> {
+    try {
+      const parsedCpf = this.utilsService.formatCPF(cpf);
 
-    const account = this.accountService.findByCpf(parsedCpf);
+      const account = await this.accountService.findByCpf(parsedCpf);
 
-    if (account) {
-      return;
+      if (account) {
+        return account;
+      }
+    } catch (error) {
+      this.logger.error(error);
+      throw new HttpException(
+        {
+          error: 'Não foi encontrado nenhuma conta com esse CPF.',
+        },
+        HttpStatus.NOT_FOUND,
+      );
     }
   }
 }
