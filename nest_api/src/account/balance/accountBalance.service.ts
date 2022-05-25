@@ -27,7 +27,7 @@ export class AccountBalanceService {
     }
   }
 
-  public async create(
+  private async create(
     createAccountBalanceDto: CreateAccountBalanceDto,
   ): Promise<AccountBalance> {
     const transaction = this.accountBalanceRepository.create(
@@ -36,7 +36,7 @@ export class AccountBalanceService {
     return await this.accountBalanceRepository.save(transaction);
   }
 
-  public async findAccountLastBalance(
+  private async findAccountLastBalance(
     accountId: number,
   ): Promise<AccountBalance> {
     return await this.accountBalanceRepository.findOne({
