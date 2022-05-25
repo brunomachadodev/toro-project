@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class CreateAccountDto {
   @IsNotEmpty()
@@ -7,6 +13,8 @@ export class CreateAccountDto {
 
   @IsNotEmpty()
   @IsString()
+  @MinLength(12)
+  @MaxLength(14)
   public cpf: string;
 
   @IsNotEmpty()
