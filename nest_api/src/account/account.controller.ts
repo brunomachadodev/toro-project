@@ -1,13 +1,12 @@
 import {
   Body,
   Controller,
+  HttpCode,
   HttpException,
   HttpStatus,
   Logger,
   Post,
-  Res
 } from '@nestjs/common';
-import { Response } from 'express';
 import { AppErrorService } from 'src/utils/appError.service';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
@@ -24,36 +23,55 @@ export class AccountController {
   private logger: Logger = new Logger(AccountController.name);
 
   @Post('create')
+  @HttpCode(201)
   public async create(
     @Body() createAccountDto: CreateAccountDto,
-    @Res() response: Response,
   ): Promise<Express.Response | Account> {
-    const parsedData = createAccountDto;
-    parsedData.cpf = this.utilsService.formatCpf(createAccountDto.cpf);
+    try {
+      const parsedData = createAccountDto;
+      parsedData.cpf = this.utilsService.formatCpf(createAccountDto.cpf);
 
-    if (!this.utilsService.validateCpf(parsedData.cpf))
-      throw new HttpException(
-        { error: 'CPF não é válido.' },
-        HttpStatus.NOT_ACCEPTABLE,
+      if (!this.utilsService.validateCpf(parsedData.cpf))
+        throw new AppErrorService('CPF não é válido.', 406);
+
+      const accountUsingEmail = await this.accountService.findByEmail(
+        parsedData.email,
       );
 
-    const accountUsingEmail = await this.accountService.findByEmail(
-      parsedData.email,
-    );
-
-    const accountUsingCpf = await this.accountService.findByCpf(parsedData.cpf);
-
-    if (!accountUsingEmail && !accountUsingCpf) {
-      const accountData = await this.accountService.handleAccountCreation(
-        createAccountDto,
+      const accountUsingCpf = await this.accountService.findByCpf(
+        parsedData.cpf,
       );
-      return response.status(201).send(accountData);
-    } else {
-      return response.status(409).send({
-        error: `Não foi possível criar uma nova conta. ${
-          accountUsingEmail ? 'Email já cadastrado. ' : ''
-        }${accountUsingCpf ? 'CPF já cadastrado.' : ''}`,
-      });
+
+      if (!accountUsingEmail && !accountUsingCpf) {
+        const accountData = await this.accountService.handleAccountCreation(
+          createAccountDto,
+        );
+        return accountData;
+      } else {
+        throw new AppErrorService(
+          `Não foi possível criar uma nova conta. ${
+            accountUsingEmail ? 'Email já cadastrado. ' : ''
+          }${accountUsingCpf ? 'CPF já cadastrado.' : ''}`,
+          409,
+        );
+      }
+    } catch (error) {
+      this.logger.error(JSON.stringify(error));
+      if (error instanceof AppErrorService) {
+        throw new HttpException(
+          {
+            error: error.message,
+          },
+          error.statusCode,
+        );
+      } else {
+        throw new HttpException(
+          {
+            error: 'Erro ao buscar conta.',
+          },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 
@@ -76,7 +94,7 @@ export class AccountController {
         );
       }
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(JSON.stringify(error));
       if (error instanceof AppErrorService) {
         throw new HttpException(
           {
