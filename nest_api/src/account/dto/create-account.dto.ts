@@ -3,7 +3,7 @@ import {
   IsNotEmpty,
   IsString,
   MaxLength,
-  MinLength,
+  MinLength
 } from 'class-validator';
 
 export class CreateAccountDto {
@@ -13,7 +13,7 @@ export class CreateAccountDto {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(12)
+  @MinLength(11)
   @MaxLength(14)
   public cpf: string;
 
