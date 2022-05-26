@@ -4,7 +4,7 @@ import {
   HttpException,
   HttpStatus,
   Logger,
-  Post,
+  Post
 } from '@nestjs/common';
 import { AppErrorService } from 'src/utils/appError.service';
 import { EventsService } from './events.service';
@@ -33,7 +33,7 @@ export class EventsController {
         return await this.eventsService.handleDepositTransaction(depositDto);
       }
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(JSON.stringify(error));
       if (error instanceof AppErrorService) {
         throw new HttpException(
           {
