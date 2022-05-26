@@ -8,6 +8,7 @@ import {
   Res
 } from '@nestjs/common';
 import { Response } from 'express';
+import { AppErrorService } from 'src/utils/appError.service';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { findByCpfDto } from './dto/find-account.dto';
@@ -68,15 +69,29 @@ export class AccountController {
       if (account) {
         delete account.created_at;
         return account;
+      } else {
+        throw new AppErrorService(
+          'Não foi encontrada nenhuma conta com esse CPF.',
+          404,
+        );
       }
     } catch (error) {
       this.logger.error(error);
-      throw new HttpException(
-        {
-          error: 'Não foi encontrado nenhuma conta com esse CPF.',
-        },
-        HttpStatus.NOT_FOUND,
-      );
+      if (error instanceof AppErrorService) {
+        throw new HttpException(
+          {
+            error: error.message,
+          },
+          error.statusCode,
+        );
+      } else {
+        throw new HttpException(
+          {
+            error: 'Erro ao buscar conta.',
+          },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 }
