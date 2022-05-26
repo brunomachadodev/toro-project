@@ -1,19 +1,56 @@
-export default function SearchBox({ placeholder, ariaLabel }) {
+import axios from 'axios';
+import { useState } from 'react';
+
+type AccountDataType = {
+  id: number;
+  name: string;
+  email: string;
+  cpf: string;
+};
+
+export default function SearchBox({ placeholder, callback, errorCallback }) {
+  const [cpf, setCpf] = useState('');
+
+  function handleChange(event) {
+    setCpf(event.target.value);
+  }
+
+  async function getAccountData(event): Promise<string | void> {
+    event.preventDefault();
+    if (!cpf) return errorCallback('Digite um CPF para buscar a conta.');
+    try {
+      await axios
+        .post('http://localhost:3333/account/find-by-cpf', {
+          cpf: `${cpf?.toString().replace(/[^\d]+/g, '')}`,
+        })
+        .then((response) => callback(response.data))
+        .catch((error) => {
+          throw error;
+        });
+    } catch (error) {
+      if (error.response.data.error === 'Bad Request') {
+        errorCallback('Não foi possível buscar esse CPF.');
+      } else {
+        errorCallback(error.response.data.error);
+      }
+    }
+  }
   return (
     <div className='flex justify-center'>
-      <div className='mb-3 xl:w-96'>
+      <div className='mb-4 xl:w-96'>
         <div className='input-group relative flex items-stretch w-full mb-4'>
           <input
             type='search'
+            maxLength={14}
             className='form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded-l transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none'
             placeholder={placeholder}
-            aria-label={ariaLabel}
-            aria-describedby='component-button'
+            onChange={handleChange}
           />
           <button
             className='btn px-6 py-2.5 bg-violet-800 text-white font-medium text-xs leading-tight uppercase rounded-r shadow-md hover:bg-violet-700 hover:shadow-lg focus:bg-violet-700  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-violet-800 active:shadow-lg transition duration-150 ease-in-out flex items-center'
             type='button'
             id='component-button'
+            onClick={getAccountData}
           >
             <svg
               aria-hidden='true'
