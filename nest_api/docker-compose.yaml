@@ -17,8 +17,6 @@ services:
       - toro-network
     depends_on:
       - postgres
-    # env_file:
-    #   - .env
 
   postgres:
     container_name: postgres
