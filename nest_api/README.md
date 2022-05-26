@@ -72,7 +72,7 @@ $ yarn test
 
 ## TypeORM
 
-Actual version using >= **0.3.6** <br>
+Actual version used >= **0.3.6** <br>
 Pay attention to the ORM documentation as it suggests CLI commands that only works on 0.2.x versions.
 <br><br>
 No need to install TypeORM global CLI.
