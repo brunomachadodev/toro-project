@@ -6,6 +6,7 @@ import {
   Logger,
   Post
 } from '@nestjs/common';
+import { AppErrorService } from 'src/utils/appError.service';
 import { EventsService } from './events.service';
 
 @Controller('account/events')
@@ -23,12 +24,21 @@ export class EventsController {
       }
     } catch (error) {
       this.logger.error(error);
-      throw new HttpException(
-        {
-          error: 'Erro ao registrar transação.',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      if (error instanceof AppErrorService) {
+        throw new HttpException(
+          {
+            error: error.message,
+          },
+          error.statusCode,
+        );
+      } else {
+        throw new HttpException(
+          {
+            error,
+          },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 }
