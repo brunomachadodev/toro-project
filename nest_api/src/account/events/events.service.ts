@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AppErrorService } from 'src/utils/appError.service';
 import { Repository } from 'typeorm';
 import { AccountService } from '../account.service';
 import { AccountBalanceService } from '../balance/accountBalance.service';
@@ -41,6 +42,11 @@ export class EventsService {
       );
 
       return transaction;
+    } else {
+      throw new AppErrorService(
+        'CPF de origem não correspondente ao da conta.',
+        403,
+      );
     }
   }
 
@@ -64,11 +70,8 @@ export class EventsService {
   private async registerEvent(
     registerEventDto: RegisterEventDto,
   ): Promise<AccountTransactions> {
-    console.log(registerEventDto);
     const eventCreated =
       this.accountTransactionsRepository.create(registerEventDto);
-
-    console.log(eventCreated);
 
     return await this.accountTransactionsRepository.save(eventCreated);
   }
