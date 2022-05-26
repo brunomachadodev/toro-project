@@ -5,9 +5,11 @@
     "build": "next build"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "next": "latest",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-input-mask": "^2.0.4"
   },
   "devDependencies": {
     "@types/node": "^17.0.35",
