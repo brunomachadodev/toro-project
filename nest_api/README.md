@@ -10,13 +10,6 @@ _This project works with the frontend project, but also could be used as an isol
 
 # Installation
 
-Use yarn as the package manager.
-
-```bash
-# Install yarn
-$ npm install --global yarn
-```
-
 Install all dependencies.
 
 ```bash
@@ -68,8 +61,6 @@ $ yarn start:debug
 $ yarn start:prod
 ```
 
-<br>
-
 ## Test
 
 ```bash
@@ -87,7 +78,7 @@ Pay attention to the ORM documentation as it suggests CLI commands that only wor
 No need to install TypeORM global CLI.
 
 ```bash
-# Using CLI from within the project
+# Using CLI from within the docker container
 $ yarn typeorm
 ```
 
@@ -96,14 +87,7 @@ $ yarn typeorm
 ```bash
 # Create
 $ yarn typeorm migration:create <PATH/MIGRATION_NAME>
+
 # Example
-$ yarn typeorm migration:create src/
-# Run (core database)
-$ yarn migration-run-core
-
-# Run (acquisition database)
-$ yarn migration-run-acquisition
-
-# Run (all databases)
-$ yarn migration-run-all
+$ yarn typeorm migration:create src/database/migrations/createAccountForeignKey
 ```
