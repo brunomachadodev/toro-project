@@ -66,6 +66,7 @@ export class AccountController {
       const account = await this.accountService.findByCpf(parsedCpf);
 
       if (account) {
+        delete account.created_at;
         return account;
       }
     } catch (error) {
