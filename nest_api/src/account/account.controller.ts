@@ -10,6 +10,7 @@ import {
 import { Response } from 'express';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
+import { findByCpfDto } from './dto/find-account.dto';
 import { Account } from './entities/account.entity';
 import { UtilsService } from './utils/utils.service';
 
@@ -28,6 +29,12 @@ export class AccountController {
   ): Promise<Express.Response | Account> {
     const parsedData = createAccountDto;
     parsedData.cpf = this.utilsService.formatCpf(createAccountDto.cpf);
+
+    if (!this.utilsService.validateCpf(parsedData.cpf))
+      throw new HttpException(
+        { error: 'CPF não é válido.' },
+        HttpStatus.NOT_ACCEPTABLE,
+      );
 
     const accountUsingEmail = await this.accountService.findByEmail(
       parsedData.email,
@@ -49,8 +56,10 @@ export class AccountController {
     }
   }
 
-  @Post('find')
-  public async findAccountByCpf(cpf: string): Promise<Account> {
+  @Post('find-by-cpf')
+  public async findAccountByCpf(
+    @Body() { cpf }: findByCpfDto,
+  ): Promise<Account> {
     try {
       const parsedCpf = this.utilsService.formatCpf(cpf);
 
