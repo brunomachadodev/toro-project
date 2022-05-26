@@ -1,12 +1,5 @@
 import axios from 'axios';
-import { useState } from 'react';
-
-type AccountDataType = {
-  id: number;
-  name: string;
-  email: string;
-  cpf: string;
-};
+import { SyntheticEvent, useState } from 'react';
 
 export default function SearchBox({ placeholder, callback, errorCallback }) {
   const [cpf, setCpf] = useState('');
@@ -15,18 +8,19 @@ export default function SearchBox({ placeholder, callback, errorCallback }) {
     setCpf(event.target.value);
   }
 
-  async function getAccountData(event): Promise<string | void> {
+  async function getAccountData(event: SyntheticEvent): Promise<string | void> {
     event.preventDefault();
     if (!cpf) return errorCallback('Digite um CPF para buscar a conta.');
     try {
-      await axios
+      const accountResponse = await axios
         .post('http://localhost:3333/account/find-by-cpf', {
           cpf: `${cpf?.toString().replace(/[^\d]+/g, '')}`,
         })
-        .then((response) => callback(response.data))
+        .then((response) => response.data)
         .catch((error) => {
           throw error;
         });
+      return callback(accountResponse);
     } catch (error) {
       if (error.response.data.error === 'Bad Request') {
         errorCallback('Não foi possível buscar esse CPF.');
@@ -34,6 +28,7 @@ export default function SearchBox({ placeholder, callback, errorCallback }) {
         errorCallback(error.response.data.error);
       }
     }
+    return null;
   }
   return (
     <div className='flex justify-center'>
