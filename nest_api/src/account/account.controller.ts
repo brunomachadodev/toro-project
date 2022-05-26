@@ -27,7 +27,7 @@ export class AccountController {
     @Res() response: Response,
   ): Promise<Express.Response | Account> {
     const parsedData = createAccountDto;
-    parsedData.cpf = this.utilsService.formatCPF(createAccountDto.cpf);
+    parsedData.cpf = this.utilsService.formatCpf(createAccountDto.cpf);
 
     const accountUsingEmail = await this.accountService.findByEmail(
       parsedData.email,
@@ -52,7 +52,7 @@ export class AccountController {
   @Post('find')
   public async findAccountByCpf(cpf: string): Promise<Account> {
     try {
-      const parsedCpf = this.utilsService.formatCPF(cpf);
+      const parsedCpf = this.utilsService.formatCpf(cpf);
 
       const account = await this.accountService.findByCpf(parsedCpf);
 

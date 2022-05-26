@@ -19,7 +19,7 @@ export class EventsService {
   ) {}
 
   public async handleTransferTransaction(transferDto: TransferEventDto) {
-    transferDto.origin.cpf = this.utilsService.formatCPF(
+    transferDto.origin.cpf = this.utilsService.formatCpf(
       transferDto.origin.cpf,
     );
     const account = await this.accountService.findByCpf(transferDto.origin.cpf);
