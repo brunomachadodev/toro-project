@@ -26,7 +26,6 @@ export class AccountService {
     } else {
       throw new Error('Error creating account');
     }
-
   }
 
   private async create(createAccountDto: CreateAccountDto): Promise<Account> {
