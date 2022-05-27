@@ -6,7 +6,7 @@ import { AccountService } from '../account.service';
 import { AccountBalanceService } from '../balance/accountBalance.service';
 import { AccountTransactions } from '../entities/account_transactions.entity';
 import { UtilsService } from '../utils/utils.service';
-import { DepositEventDto, TransferEventDto } from './dto/deposit-event.dto';
+import { DepositEventDto } from './dto/deposit-event.dto';
 import { RegisterEventDto } from './dto/register-event.dto';
 
 @Injectable()
@@ -19,11 +19,32 @@ export class EventsService {
     private readonly accountBalanceService: AccountBalanceService,
   ) {}
 
-  public async handleTransferTransaction(transferDto: TransferEventDto) {
+  public async handleTransferTransaction(transferDto: DepositEventDto) {
+    if (
+      !transferDto.origin.bank ||
+      !transferDto.origin.branch ||
+      !transferDto.origin.cpf
+    ) {
+      throw new AppErrorService(
+        'Ausência de informações do banco de origem.',
+        400,
+      );
+    }
+
     transferDto.origin.cpf = this.utilsService.formatCpf(
       transferDto.origin.cpf,
     );
-    const account = await this.accountService.findByCpf(transferDto.origin.cpf);
+
+    const account = await this.accountService.findById(
+      +transferDto.target.account,
+    );
+
+    if (!account) {
+      throw new AppErrorService(
+        'Não foi possível encontrar nenhuma conta com o id informado.',
+        404,
+      );
+    }
 
     if (account?.id === +transferDto.target.account) {
       const eventPayload = {
@@ -54,6 +75,7 @@ export class EventsService {
     const account = await this.accountService.findById(
       +depositDto.target.account,
     );
+
     if (account) {
       const eventPayload = {
         accountId: account.id,
