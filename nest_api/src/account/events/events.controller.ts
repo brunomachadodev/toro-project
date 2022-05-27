@@ -7,6 +7,7 @@ import {
   Post
 } from '@nestjs/common';
 import { AppErrorService } from 'src/utils/appError.service';
+import { DepositEventDto } from './dto/deposit-event.dto';
 import { EventsService } from './events.service';
 
 @Controller('account/events')
@@ -15,11 +16,11 @@ export class EventsController {
   private logger: Logger = new Logger(EventsController.name);
 
   @Post('deposit')
-  public async createTransaction(@Body() depositDto: any) {
+  public async createTransaction(@Body() depositDto: DepositEventDto) {
     try {
       if (
-        depositDto.target.bank != '352' ||
-        depositDto.target.branch != '0001'
+        depositDto?.target.bank != '352' ||
+        depositDto?.target.branch != '0001'
       ) {
         throw new AppErrorService(
           'Dados incompatíveis do banco de destino.',
