@@ -6,7 +6,7 @@ import {
   IsNumberString,
   IsOptional,
   IsString,
-  ValidateNested,
+  ValidateNested
 } from 'class-validator';
 
 class Target {
@@ -24,15 +24,15 @@ class Target {
 }
 
 class Origin {
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumberString()
   public bank: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumberString()
   public branch: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumberString()
   public cpf: string;
 }
