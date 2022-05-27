@@ -16,7 +16,7 @@ export class EventsService {
     private readonly accountTransactionsRepository: Repository<AccountTransactions>,
     private readonly accountService: AccountService,
     private readonly utilsService: UtilsService,
-    private readonly accountBalaanceService: AccountBalanceService,
+    private readonly accountBalanceService: AccountBalanceService,
   ) {}
 
   public async handleTransferTransaction(transferDto: TransferEventDto) {
@@ -35,7 +35,7 @@ export class EventsService {
       };
 
       const transaction = await this.registerEvent(eventPayload).then(() =>
-        this.accountBalaanceService.handleBalanceAddition({
+        this.accountBalanceService.handleBalanceAddition({
           accountId: account.id,
           balance: transferDto.amount,
         }),
