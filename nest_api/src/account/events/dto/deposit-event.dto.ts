@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import {
+  IsIn,
   IsNotEmpty,
   IsNotEmptyObject,
   IsNumber,
@@ -40,6 +41,7 @@ class Origin {
 export class DepositEventDto {
   @IsNotEmpty()
   @IsString()
+  @IsIn(['TRANSFER', 'DEPOSIT', 'PIX'])
   public event: string;
 
   @IsNotEmptyObject()
