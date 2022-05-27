@@ -85,9 +85,9 @@ $ yarn next
 // POST http://localhost:3333/account/create
 
 {
-  "name": string,
-  "cpf": string,
-  "email": string
+  "name": "Bruno Machado",
+  "cpf": "949.192.620-94",
+  "email": "bruno@test.com"
 }
 ```
 
@@ -97,7 +97,7 @@ $ yarn next
 // POST http://localhost:3333/account/find-by-cpf
 
 {
-  "cpf": string,
+  "cpf": "949.192.620-94"
 }
 ```
 
@@ -107,8 +107,8 @@ $ yarn next
 // POST http://localhost:3333/account/balance/create
 
 {
-  "accountId": number,
-  "balance": number,
+  "accountId": 3,
+  "balance": 1000
 }
 ```
 
@@ -118,17 +118,17 @@ $ yarn next
 // POST http://localhost:3333/account/events/deposit
 
 {
-  "event": string, //["TRANSFER", "DEPOSIT", "PIX"]
+  "event": "TRANSFER", //["TRANSFER", "DEPOSIT", "PIX"]
   "target": {
     "bank": "352",
     "branch": "0001",
-    "account": string
+    "account": 3
   },
   "origin": {
-    "bank": string,
-    "branch": string,
-    "cpf": string,
+    "bank": "100",
+    "branch": "34534",
+    "cpf": "949.192.620-94",
   }
-  "amount": number
+  "amount": 1000
 }
 ```

@@ -38,7 +38,7 @@ Enter the app container console to be able to run others commands.
 $ docker exec -it app bash
 ```
 
-Then run database migrations.
+Then run database migrations to create tables and relations.
 
 ```bash
 # run migrations
@@ -66,6 +66,62 @@ $ yarn start:prod
 ```bash
 # unit tests
 $ yarn test
+```
+
+# API routes and payload examples
+
+## Create account
+
+```json
+// POST http://localhost:3333/account/create
+
+{
+  "name": "Bruno Machado",
+  "cpf": "949.192.620-94",
+  "email": "bruno@test.com"
+}
+```
+
+## Find account
+
+```json
+// POST http://localhost:3333/account/find-by-cpf
+
+{
+  "cpf": "949.192.620-94",
+}
+```
+
+## Create balance
+
+```json
+// POST http://localhost:3333/account/balance/create
+
+{
+  "accountId": 3,
+  "balance": 1000,
+}
+```
+
+## Create deposit
+
+```json
+// POST http://localhost:3333/account/events/deposit
+
+{
+  "event": "TRANSFER", //["TRANSFER", "DEPOSIT", "PIX"]
+  "target": {
+    "bank": "352",
+    "branch": "0001",
+    "account": 3
+  },
+  "origin": {
+    "bank": "100",
+    "branch": "34534",
+    "cpf": "949.192.620-94",
+  }
+  "amount": 1000
+}
 ```
 
 # Database
