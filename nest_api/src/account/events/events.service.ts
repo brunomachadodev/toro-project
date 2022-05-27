@@ -83,9 +83,23 @@ export class EventsService {
         type: depositDto.event,
       };
 
-      return await this.registerEvent(eventPayload);
+      try {
+        const transaction = await this.registerEvent(eventPayload).then(() =>
+          this.accountBalanceService.handleBalanceAddition({
+            accountId: account.id,
+            balance: depositDto.amount,
+          }),
+        );
+
+        return transaction;
+      } catch (error) {
+        throw new AppErrorService('Erro ao registrar transação.', 500);
+      }
     } else {
-      throw new Error('Erro ao registrar transação.');
+      throw new AppErrorService(
+        'Não foi possível encontrar nenhuma conta com o id informado.',
+        404,
+      );
     }
   }
 
