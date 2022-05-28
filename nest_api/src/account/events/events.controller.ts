@@ -4,7 +4,7 @@ import {
   HttpException,
   HttpStatus,
   Logger,
-  Post
+  Post,
 } from '@nestjs/common';
 import { AppErrorService } from 'src/utils/appError.service';
 import { DepositEventDto } from './dto/deposit-event.dto';
