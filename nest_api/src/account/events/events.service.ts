@@ -46,7 +46,10 @@ export class EventsService {
       );
     }
 
-    if (account?.id === +transferDto.target.account) {
+    if (
+      account?.id === +transferDto.target.account &&
+      account?.cpf === transferDto.origin.cpf
+    ) {
       const eventPayload = {
         type: transferDto.event,
         accountId: account.id,
@@ -65,7 +68,7 @@ export class EventsService {
       return transaction;
     } else {
       throw new AppErrorService(
-        'CPF de origem não correspondente ao da conta.',
+        'Dados de origem não correspondentes ao da conta.',
         403,
       );
     }
