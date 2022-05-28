@@ -7,7 +7,7 @@ import {
   IsNumberString,
   IsOptional,
   IsString,
-  ValidateNested
+  ValidateNested,
 } from 'class-validator';
 
 class Target {
@@ -34,7 +34,7 @@ class Origin {
   public branch: string;
 
   @IsOptional()
-  @IsNumberString()
+  @IsString()
   public cpf: string;
 }
 
