@@ -16,6 +16,7 @@
     "@types/react": "^18.0.9",
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
+    "@types/react-input-mask": "^3.0.1",
     "autoprefixer": "^10.4.7",
     "eslint": "^7.32.0 || ^8.2.0",
     "eslint-config-airbnb": "^19.0.4",
