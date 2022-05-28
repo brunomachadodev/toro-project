@@ -88,7 +88,7 @@ $ yarn test
 // POST http://localhost:3333/account/find-by-cpf
 
 {
-  "cpf": "949.192.620-94",
+  "cpf": "949.192.620-94"
 }
 ```
 
@@ -98,8 +98,8 @@ $ yarn test
 // POST http://localhost:3333/account/balance/create
 
 {
-  "accountId": 3,
-  "balance": 1000,
+  "accountId": "1",
+  "balance": 1000
 }
 ```
 
@@ -113,13 +113,13 @@ $ yarn test
   "target": {
     "bank": "352",
     "branch": "0001",
-    "account": 3
+    "account": "1"
   },
   "origin": {
     "bank": "100",
     "branch": "34534",
-    "cpf": "949.192.620-94",
-  }
+    "cpf": "949.192.620-94"
+  },
   "amount": 1000
 }
 ```
