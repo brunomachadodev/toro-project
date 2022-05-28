@@ -1,20 +1,19 @@
 import axios from 'axios';
 import { SyntheticEvent, useState } from 'react';
+import InputMask from 'react-input-mask';
 
 export default function SearchBox({ placeholder, callback, errorCallback }) {
   const [cpf, setCpf] = useState('');
 
-  function handleChange(event) {
-    setCpf(event.target.value);
-  }
-
   async function getAccountData(event: SyntheticEvent): Promise<string | void> {
     event.preventDefault();
     if (!cpf) return errorCallback('Digite um CPF para buscar a conta.');
+    const parsedCpf = cpf?.toString().replace(/[^\d]+/g, '');
+    if (parsedCpf.length !== 11) return errorCallback('Digite um CPF válido.');
     try {
       const accountResponse = await axios
         .post('http://localhost:3333/account/find-by-cpf', {
-          cpf: `${cpf?.toString().replace(/[^\d]+/g, '')}`,
+          cpf: parsedCpf,
         })
         .then((response) => response.data)
         .catch((error) => {
@@ -22,10 +21,13 @@ export default function SearchBox({ placeholder, callback, errorCallback }) {
         });
       return callback(accountResponse);
     } catch (error) {
-      if (error.response.data.error === 'Bad Request') {
+      if (error?.response?.data?.error === 'Bad Request') {
         errorCallback('Não foi possível buscar esse CPF.');
+      } else if (error?.response?.data?.error) {
+        errorCallback(error?.response?.data?.error);
       } else {
-        errorCallback(error.response.data.error);
+        console.error(error.response);
+        errorCallback('Não foi possível consultar o CPF.');
       }
     }
     return null;
@@ -34,12 +36,12 @@ export default function SearchBox({ placeholder, callback, errorCallback }) {
     <div className='flex justify-center'>
       <div className='mb-4 xl:w-96'>
         <div className='input-group relative flex items-stretch w-full mb-4'>
-          <input
-            type='search'
-            maxLength={14}
+          <InputMask
+          type='search'
             className='form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded-l transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none'
+            mask='999.999.999-99'
+            onChange={(event) => setCpf(event.target.value)}
             placeholder={placeholder}
-            onChange={handleChange}
           />
           <button
             className='btn px-6 py-2.5 bg-violet-800 text-white font-medium text-xs leading-tight uppercase rounded-r shadow-md hover:bg-violet-700 hover:shadow-lg focus:bg-violet-700  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-violet-800 active:shadow-lg transition duration-150 ease-in-out flex items-center'
